@@ -80,7 +80,7 @@ Expected: installs without error. Verify: `python -c "import PySide6; print(PySi
 Download these `.ttf` files (Open Font License / free) into `assets/fonts/`:
 - `PressStart2P-Regular.ttf` — https://github.com/google/fonts/raw/main/ofl/pressstart2p/PressStart2P-Regular.ttf
 - `PixelifySans-Regular.ttf` — https://github.com/google/fonts/raw/main/ofl/pixelifysans/PixelifySans%5Bwght%5D.ttf (variable; rename to PixelifySans-Regular.ttf)
-- `DepartureMono-Regular.ttf` — https://github.com/rektdeckard/departure-mono/raw/main/fonts/ttf/DepartureMono-Regular.ttf
+- `DepartureMono-Regular.otf` — https://cdn.jsdelivr.net/gh/rektdeckard/departure-mono@main/public/assets/DepartureMono-Regular.otf  (NOTA: DepartureMono é distribuída em `.otf`, não `.ttf`. O carregador de fontes e o empacotamento devem usar `DepartureMono-Regular.otf`.)
 
 PowerShell example:
 ```powershell
