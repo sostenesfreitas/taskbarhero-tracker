@@ -1,13 +1,14 @@
 """Modelo de estado de cooldown dos baús monitorados. Sem Qt; relógio injetável."""
+import math
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-from catalogo import bau_para_item_key
+from catalogo import Bau, bau_para_item_key
 
 
 @dataclass
 class EstadoBau:
-    bau: object                       # Bau
+    bau: Bau
     estado: str = "nunca"             # 'nunca' | 'cooldown' | 'pronto'
     ultimo_detectado: datetime | None = None
     libera_em: datetime | None = None
@@ -15,6 +16,8 @@ class EstadoBau:
 
 
 class Rastreador:
+    """Mantém o estado de cooldown de cada baú monitorado. Tempo injetável via `relogio`."""
+
     def __init__(self, monitorados: list[str], relogio=datetime.now):
         self._relogio = relogio
         self._callbacks_pronto = []
@@ -25,10 +28,10 @@ class Rastreador:
     def on_pronto(self, cb) -> None:
         self._callbacks_pronto.append(cb)
 
-    def estado(self, item_key: str):
+    def estado(self, item_key: str) -> EstadoBau | None:
         return self._estados.get(str(item_key))
 
-    def estados(self) -> list:
+    def estados(self) -> list[EstadoBau]:
         return list(self._estados.values())
 
     def detectado(self, item_key: str) -> None:
@@ -53,7 +56,7 @@ class Rastreador:
                 for cb in self._callbacks_pronto:
                     cb(e.bau.item_key)
             else:
-                e.restante_seg = int(restante) + (1 if restante % 1 else 0)
+                e.restante_seg = math.ceil(restante)
 
     def definir_monitorados(self, monitorados: list[str]) -> None:
         novos = {}

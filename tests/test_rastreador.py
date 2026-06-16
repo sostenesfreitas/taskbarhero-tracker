@@ -50,3 +50,12 @@ def test_estado_inicial_nunca():
     r = Rastreador(["910651"], relogio=relogio)
     assert r.estado("910651").estado == "nunca"
     assert r.estado("910651").restante_seg == 0
+
+def test_definir_monitorados_preserva_estado_e_descarta_removidos():
+    estado, relogio = make_relogio(datetime(2026, 6, 16, 12, 0, 0))
+    r = Rastreador(["910651", "920651"], relogio=relogio)
+    r.detectado("910651")                       # 910651 entra em cooldown
+    r.definir_monitorados(["910651", "910801"]) # mantém 910651, remove 920651, adiciona 910801
+    assert r.estado("910651").estado == "cooldown"   # estado preservado
+    assert r.estado("920651") is None                # removido
+    assert r.estado("910801").estado == "nunca"      # novo, estado inicial
