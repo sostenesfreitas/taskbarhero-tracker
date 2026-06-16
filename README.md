@@ -77,7 +77,3 @@ Testes: `python -m pytest -q`.
 
 Projeto **não oficial**, feito pela comunidade. Não afiliado aos desenvolvedores do
 TaskBar Hero. Os ícones dos baús pertencem aos respectivos donos.
-
----
-
-Feito por [**Namoratow**](https://github.com/sostenesfreitas) · ferramentas para a comunidade.
