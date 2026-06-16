@@ -51,6 +51,8 @@ class Janela(QWidget):
         h = QHBoxLayout(barra); h.setContentsMargins(8, 4, 4, 4)
         titulo = QLabel("TASKBAR HERO"); titulo.setObjectName("TituloTexto")
         h.addWidget(titulo); h.addStretch()
+        cfgbtn = QPushButton("⚙"); cfgbtn.setFixedSize(24, 24); cfgbtn.clicked.connect(self._abrir_config)
+        h.addWidget(cfgbtn)
         fechar = QPushButton("X"); fechar.setFixedSize(24, 24); fechar.clicked.connect(self._fechar)
         h.addWidget(fechar)
         return barra
@@ -85,6 +87,13 @@ class Janela(QWidget):
 
     def contar_cards(self) -> int:
         return len(self._cards)
+
+    def _abrir_config(self) -> None:
+        from ui.painel_config import PainelConfig
+        dlg = PainelConfig(self._config, self)
+        if dlg.exec():
+            dlg.aplicar()
+            self.config_alterada.emit()
 
     def _fechar(self) -> None:
         self._config.janela_pos = [self.x(), self.y()]
