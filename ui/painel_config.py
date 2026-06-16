@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, QCheck
 from PySide6.QtCore import Qt
 
 from catalogo import bau_para_item_key, parse_item_key
+from theme import C
 
 
 class PainelConfig(QDialog):
@@ -13,6 +14,8 @@ class PainelConfig(QDialog):
     def __init__(self, config, parent=None):
         super().__init__(parent)
         self._config = config
+        # lista de edição local: alterações só vão pro config em aplicar() (Cancelar não afeta)
+        self._monitorados_em_edicao = list(config.monitorados)
         self.setWindowTitle("Configurações")
         lay = QVBoxLayout(self)
 
@@ -52,7 +55,7 @@ class PainelConfig(QDialog):
 
     def _recarregar_lista(self) -> None:
         self._lista.clear()
-        for ik in self._config.monitorados:
+        for ik in self._monitorados_em_edicao:
             try:
                 nome = bau_para_item_key(ik).nome
             except ValueError:
@@ -68,10 +71,10 @@ class PainelConfig(QDialog):
         try:
             parse_item_key(ik)
         except ValueError:
-            self._novo.setStyleSheet("border: 2px solid #C0392B;")
+            self._novo.setStyleSheet(f"border: 2px solid {C.PERIGO};")
             return
-        if ik not in self._config.monitorados:
-            self._config.monitorados.append(ik)
+        if ik not in self._monitorados_em_edicao:
+            self._monitorados_em_edicao.append(ik)
             self._recarregar_lista()
         self._novo.clear(); self._novo.setStyleSheet("")
 
