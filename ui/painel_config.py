@@ -13,6 +13,7 @@ class PainelConfig(QDialog):
 
     def __init__(self, config, parent=None):
         super().__init__(parent)
+        self.setObjectName("PainelConfig")  # alvo do QSS (fonte Departure Mono)
         self._config = config
         # lista de edição local: alterações só vão pro config em aplicar() (Cancelar não afeta)
         self._monitorados_em_edicao = list(config.monitorados)

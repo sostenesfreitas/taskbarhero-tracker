@@ -57,4 +57,6 @@ QPushButton {{ background: {COURO}; border: 2px solid {OURO}; color: {TEXTO_OSSO
 QPushButton:hover {{ border-color: {OURO_BRILHO}; background: {COURO_CLARO}; }}
 QPushButton:disabled {{ color: {TEXTO_MUDO}; border-color: {OURO_SOMBRA}; }}
 QToolTip {{ background: {OBSIDIANA}; color: {TEXTO_OSSO}; border: 1px solid {OURO}; }}
+/* painel de config: fonte legível (Departure Mono) em vez da pixel */
+QDialog#PainelConfig, QDialog#PainelConfig QWidget {{ font-family: 'Departure Mono'; font-size: 12px; }}
 """.format(**{k: v for k, v in vars(C).items() if not k.startswith("_")})
