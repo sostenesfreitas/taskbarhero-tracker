@@ -24,18 +24,21 @@ QFrame#TituloBarra {{
     border: 2px solid {OURO};
 }}
 QLabel#TituloTexto {{ font-family: 'Press Start 2P'; color: {TEXTO_OURO}; font-size: 12px; }}
-QLabel#Stage {{ color: {TEXTO_OURO}; font-family: 'Pixelify Sans'; font-size: 14px; }}
-QLabel#Tempo {{ font-family: 'Departure Mono'; font-size: 16px; color: {TEXTO_OSSO}; }}
-QLabel#Status {{ color: {TEXTO_MUDO}; font-size: 12px; }}
-QFrame#Card {{ background: {OBSIDIANA}; border: 2px solid {RAR_COMUM}; }}
-QFrame#Card[raridade="raro"] {{ border-color: {RAR_RARO}; }}
-QFrame#Card[raridade="epico"] {{ border-color: {RAR_EPICO}; }}
-QFrame#Card[pronto="true"] {{ border-color: {MARCADOR}; }}
-QProgressBar {{ background: {SLOT_VAZIO}; border: 2px solid {OURO_SOMBRA};
-                text-align: center; color: {TEXTO_OSSO}; }}
-QProgressBar::chunk {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:0,
-                       stop:0 {LATAO}, stop:1 {OURO_BRILHO}); }}
-QProgressBar[pronto="true"]::chunk {{ background: {MARCADOR}; }}
+QLabel#Status {{ color: {TEXTO_MUDO}; font-size: 11px; }}
+
+/* --- Linha compacta (estilo RECORDS) --- */
+QFrame#Linha {{ background: {OBSIDIANA}; border: none; border-bottom: 1px solid {BREU}; }}
+QFrame#Linha QLabel {{ background: transparent; }}
+QLabel#LinhaNome {{ color: {TEXTO_OSSO}; font-family: 'Pixelify Sans'; font-size: 13px; }}
+QLabel#LinhaStage {{ color: {TEXTO_MUDO}; font-family: 'Pixelify Sans'; font-size: 12px; }}
+QLabel#LinhaTempo {{ color: {TEXTO_OSSO}; font-family: 'Departure Mono'; font-size: 13px; }}
+/* azul/cinza: leve tom no nome pela raridade */
+QFrame#Linha[raridade="raro"] QLabel#LinhaNome {{ color: {RAR_RARO}; }}
+QFrame#Linha[raridade="epico"] QLabel#LinhaNome {{ color: {RAR_EPICO}; }}
+/* pronto: a linha inteira fica verde */
+QFrame#Linha[pronto="true"] {{ background: rgba(63,174,74,0.14); border-bottom: 1px solid {MARCADOR}; }}
+QFrame#Linha[pronto="true"] QLabel {{ color: {MARCADOR}; }}
+
 QPushButton {{ background: {COURO}; border: 2px solid {OURO}; color: {TEXTO_OSSO}; padding: 4px 10px; }}
 QPushButton:hover {{ border-color: {OURO_BRILHO}; background: {COURO_CLARO}; }}
 QPushButton:disabled {{ color: {TEXTO_MUDO}; border-color: {OURO_SOMBRA}; }}
