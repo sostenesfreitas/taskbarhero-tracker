@@ -54,7 +54,7 @@ class CardBau(QFrame):
 
         self._tempo = QLabel(); self._tempo.setObjectName("LinhaTempo")
         self._tempo.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self._tempo.setMinimumWidth(56)  # cabe "PRONTO" sem cortar
+        self._tempo.setMinimumWidth(68)  # cabe "PRONTO" sem cortar (fonte maior)
         layout.addWidget(self._tempo)
 
         self.setProperty("raridade", bau.raridade)

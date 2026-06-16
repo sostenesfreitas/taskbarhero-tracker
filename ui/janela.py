@@ -49,7 +49,7 @@ class Janela(QWidget):
         self._area.setWidget(host); col.addWidget(self._area)
         self._popular_cards()
 
-        self.setMinimumWidth(280)
+        self.setMinimumWidth(300)
         self._aplicar_estado_foco()
         self._ajustar_altura()
         self._rastreador.on_pronto(self._ao_ficar_pronto)

@@ -43,9 +43,9 @@ QLabel#Status {{ color: {TEXTO_MUDO}; font-size: 11px; }}
 /* --- Linha compacta (estilo RECORDS) --- */
 QFrame#Linha {{ background: {OBSIDIANA}; border: none; border-bottom: 1px solid {BREU}; }}
 QFrame#Linha QLabel {{ background: transparent; }}
-QLabel#LinhaNome {{ color: {TEXTO_OSSO}; font-family: 'Pixelify Sans'; font-size: 13px; }}
-QLabel#LinhaStage {{ color: {TEXTO_MUDO}; font-family: 'Pixelify Sans'; font-size: 12px; }}
-QLabel#LinhaTempo {{ color: {TEXTO_OSSO}; font-family: 'Departure Mono'; font-size: 13px; }}
+QLabel#LinhaNome {{ color: {TEXTO_OSSO}; font-family: 'Pixelify Sans'; font-size: 14px; }}
+QLabel#LinhaStage {{ color: {TEXTO_MUDO}; font-family: 'Departure Mono'; font-size: 14px; }}
+QLabel#LinhaTempo {{ color: {TEXTO_OSSO}; font-family: 'Departure Mono'; font-size: 17px; }}
 /* azul/cinza: leve tom no nome pela raridade */
 QFrame#Linha[raridade="raro"] QLabel#LinhaNome {{ color: {RAR_RARO}; }}
 QFrame#Linha[raridade="epico"] QLabel#LinhaNome {{ color: {RAR_EPICO}; }}
