@@ -18,9 +18,17 @@ def test_parse_vermelho_lv50():
     assert info["tipo"] == "vermelho"
     assert info["nivel"] == 50
 
-def test_parse_invalido():
+def test_parse_invalido_curto():
     with pytest.raises(ValueError):
         parse_item_key("123")
+
+def test_parse_invalido_nao_digito():
+    with pytest.raises(ValueError):
+        parse_item_key("91ABC1")
+
+def test_parse_invalido_prefixo_desconhecido():
+    with pytest.raises(ValueError):
+        parse_item_key("940501")
 
 def test_stage_por_nivel():
     assert STAGE_POR_NIVEL[50] == ("Pesadelo", "3-5")
