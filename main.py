@@ -1,6 +1,9 @@
 # main.py
 import sys
+from pathlib import Path
+
 from PySide6.QtCore import QTimer
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
 from config import Config
@@ -8,6 +11,7 @@ from rastreador import Rastreador
 from log_watcher import LogWatcher
 from alertas import Alertas
 from theme import QSS
+from utils import asset_path
 from ui.janela import Janela, carregar_fontes
 
 
@@ -45,6 +49,9 @@ class App:
 def main():
     app = QApplication(sys.argv)
     carregar_fontes()
+    icone = asset_path("app.ico")
+    if Path(icone).exists():
+        app.setWindowIcon(QIcon(icone))
     app.setStyleSheet(QSS)
     a = App()
     a.run()
