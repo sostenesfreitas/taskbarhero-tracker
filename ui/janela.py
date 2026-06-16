@@ -109,11 +109,12 @@ class Janela(QWidget):
         self.adjustSize()
 
     def _aplicar_estado_foco(self) -> None:
-        """Mostra as molduras douradas só quando a janela está em foco."""
-        ativo = "true" if self.isActiveWindow() else "false"
-        for w in (self._moldura, self._titulobarra):
-            w.setProperty("ativo", ativo)
-            w.style().unpolish(w); w.style().polish(w)
+        """Sem foco: esconde o header e a moldura dourada (fica só a lista discreta)."""
+        ativo = self.isActiveWindow()
+        self._titulobarra.setVisible(ativo)   # header some quando sem foco
+        self._moldura.setProperty("ativo", "true" if ativo else "false")
+        self._moldura.style().unpolish(self._moldura); self._moldura.style().polish(self._moldura)
+        self._ajustar_altura()                # janela encolhe sem o header
 
     def changeEvent(self, ev):
         if ev.type() == QEvent.ActivationChange:
@@ -147,6 +148,7 @@ class Janela(QWidget):
 
     def mousePressEvent(self, ev):
         if ev.button() == Qt.LeftButton:
+            self.raise_(); self.activateWindow()   # reativa o foco -> header reaparece
             self._drag_offset = ev.globalPosition().toPoint() - self.frameGeometry().topLeft()
 
     def mouseMoveEvent(self, ev):
