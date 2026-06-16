@@ -23,6 +23,20 @@ def test_carregar_fontes_nao_quebra(app):
     from ui.janela import carregar_fontes
     carregar_fontes()  # não deve lançar mesmo se faltar .ttf
 
+def test_status_reflete_log_ausente_e_presente(app, tmp_path):
+    from config import Config
+    from rastreador import Rastreador
+    from ui.janela import Janela
+    cfg = Config(tmp_path / "config.json")
+    cfg.monitorados = ["910651"]
+    cfg.log_path = str(tmp_path / "naoexiste.log")
+    janela = Janela(cfg, Rastreador(cfg.monitorados), alertas=None)
+    assert "não encontrado" in janela._status.text().lower()
+    log = tmp_path / "Player.log"; log.write_text("", encoding="utf-8")
+    cfg.log_path = str(log)
+    janela.atualizar_status()
+    assert "monitorando" in janela._status.text().lower()
+
 def test_painel_adicionar_sem_aplicar_nao_altera_config(app, tmp_path):
     from config import Config
     from ui.painel_config import PainelConfig

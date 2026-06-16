@@ -1,4 +1,6 @@
 # ui/janela.py
+from pathlib import Path
+
 from PySide6.QtCore import Qt, QPoint, Signal
 from PySide6.QtGui import QFontDatabase
 from PySide6.QtWidgets import (QWidget, QFrame, QVBoxLayout, QHBoxLayout, QLabel,
@@ -35,8 +37,9 @@ class Janela(QWidget):
         col = QVBoxLayout(moldura); col.setContentsMargins(6, 6, 6, 6); col.setSpacing(6)
 
         col.addWidget(self._construir_titulo())
-        self._status = QLabel("● Monitorando"); self._status.setObjectName("Status")
+        self._status = QLabel(); self._status.setObjectName("Status")
         col.addWidget(self._status)
+        self.atualizar_status()
 
         area = QScrollArea(); area.setWidgetResizable(True); area.setFrameShape(QFrame.NoFrame)
         host = QWidget(); self._grade = QVBoxLayout(host); self._grade.setSpacing(6)
@@ -68,6 +71,13 @@ class Janela(QWidget):
     def atualizar_cards(self) -> None:
         for card in self._cards.values():
             card.atualizar()
+
+    def atualizar_status(self) -> None:
+        """Reflete se o Player.log foi encontrado (erro de config mais comum)."""
+        if Path(self._config.log_path).exists():
+            self._status.setText("● Monitorando")
+        else:
+            self._status.setText("⚠ Log não encontrado — abra ⚙ para escolher o arquivo")
 
     def recriar_cards(self) -> None:
         for card in self._cards.values():

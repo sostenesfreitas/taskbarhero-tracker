@@ -4,7 +4,7 @@ from pathlib import Path
 
 from PySide6.QtCore import QObject, QTimer, Signal
 
-# group 1 (count) é ignorado; só group 1 = ItemKey interessa.
+# o count vira grupo não-capturante; o único grupo capturado (group 1) é o ItemKey.
 PADRAO = re.compile(r"GetBoxCount Success Count : (?:\d+) // ItemKey : (\d+)")
 
 
@@ -70,6 +70,8 @@ class LogWatcher(QObject):
 
     def definir_intervalo(self, intervalo_seg: int) -> None:
         self._timer.setInterval(intervalo_seg * 1000)
+        if self._timer.isActive():
+            self._timer.start()  # re-arma com o novo intervalo imediatamente
 
     def _tick(self) -> None:
         for item_key in self._reader.ler_novos():

@@ -36,6 +36,7 @@ class App:
         self.watcher.definir_intervalo(self.config.intervalo_seg)
         self.watcher.definir_caminho(self.config.log_path)
         self.janela.recriar_cards()
+        self.janela.atualizar_status()
 
     def run(self):
         self.janela.show()

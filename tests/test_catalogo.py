@@ -47,3 +47,17 @@ def test_bau_para_item_key_resolve_tudo():
 
 def test_catalogo_padrao_tem_6_monitorados():
     assert set(CATALOGO_PADRAO) == {"910501","910651","910801","920501","920651","920801"}
+
+def test_lv40_usa_stage_default():
+    bau = bau_para_item_key("910401")
+    assert bau.nivel == 40
+    assert bau.stage_dificuldade == "Normal"
+    assert bau.stage_range == "1-1"
+
+def test_vermelho_resolve_epico_e_icone():
+    bau = bau_para_item_key("930801")
+    assert bau.tipo == "vermelho"
+    assert bau.raridade == "epico"
+    assert bau.cooldown_seg == 420
+    assert bau.icone == "Item_930011.png"
+    assert bau.nome == "Act Boss Box Lv80"
