@@ -1,10 +1,10 @@
 # ui/painel_config.py
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel, QCheckBox,
                                QSlider, QSpinBox, QListWidget, QListWidgetItem, QPushButton,
-                               QLineEdit, QFileDialog)
+                               QLineEdit, QFileDialog, QComboBox)
 from PySide6.QtCore import Qt
 
-from catalogo import bau_para_item_key, parse_item_key
+from catalogo import bau_para_item_key, parse_item_key, baus_conhecidos
 from theme import C
 
 
@@ -24,8 +24,20 @@ class PainelConfig(QDialog):
         self._recarregar_lista()
         lay.addWidget(self._lista)
 
+        # menu de baús conhecidos (do mais fraco ao mais forte) — fácil para quem não sabe o ItemKey
+        conhecidorow = QHBoxLayout()
+        self._combo = QComboBox()
+        for ik in baus_conhecidos():
+            b = bau_para_item_key(ik)
+            self._combo.addItem(f"{b.nome}  |  {b.stage_dificuldade} {b.stage_range}", ik)
+        btn_conhecido = QPushButton("Adicionar"); btn_conhecido.clicked.connect(self._adicionar_conhecido)
+        conhecidorow.addWidget(self._combo, 1); conhecidorow.addWidget(btn_conhecido)
+        lay.addWidget(QLabel("Adicionar baú:"))
+        lay.addLayout(conhecidorow)
+
+        # entrada manual por ItemKey (avançado: Act Boss, baús fora da lista)
         addrow = QHBoxLayout()
-        self._novo = QLineEdit(); self._novo.setPlaceholderText("ItemKey (ex.: 930801)")
+        self._novo = QLineEdit(); self._novo.setPlaceholderText("ou ItemKey manual (ex.: 930801)")
         btn_add = QPushButton("Adicionar"); btn_add.clicked.connect(self._adicionar)
         addrow.addWidget(self._novo); addrow.addWidget(btn_add)
         lay.addLayout(addrow)
@@ -65,6 +77,12 @@ class PainelConfig(QDialog):
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
             item.setCheckState(Qt.Checked)
             self._lista.addItem(item)
+
+    def _adicionar_conhecido(self) -> None:
+        ik = self._combo.currentData()
+        if ik and ik not in self._monitorados_em_edicao:
+            self._monitorados_em_edicao.append(ik)
+            self._recarregar_lista()
 
     def _adicionar(self) -> None:
         ik = self._novo.text().strip()

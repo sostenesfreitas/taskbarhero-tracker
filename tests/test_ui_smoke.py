@@ -37,6 +37,20 @@ def test_status_reflete_log_ausente_e_presente(app, tmp_path):
     janela.atualizar_status()
     assert "monitorando" in janela._status.text().lower()
 
+def test_painel_adicionar_bau_conhecido(app, tmp_path):
+    from config import Config
+    from ui.painel_config import PainelConfig
+    cfg = Config(tmp_path / "config.json")
+    cfg.monitorados = ["910651"]
+    p = PainelConfig(cfg)
+    # escolhe um baú de nível baixo (Lv15 cinza = 910151) no combo
+    idx = p._combo.findData("910151")
+    assert idx >= 0
+    p._combo.setCurrentIndex(idx)
+    p._adicionar_conhecido()
+    p.aplicar()
+    assert "910151" in cfg.monitorados
+
 def test_painel_adicionar_sem_aplicar_nao_altera_config(app, tmp_path):
     from config import Config
     from ui.painel_config import PainelConfig
