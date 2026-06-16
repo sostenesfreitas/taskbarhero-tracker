@@ -1,15 +1,23 @@
+"""Acompanha o Player.log e reporta novos drops de baú. Núcleo (LogReader) sem Qt."""
 import re
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QTimer, Signal
 
-PADRAO = re.compile(r"GetBoxCount Success Count : (\d+) // ItemKey : (\d+)")
+# group 1 (count) é ignorado; só group 1 = ItemKey interessa.
+PADRAO = re.compile(r"GetBoxCount Success Count : (?:\d+) // ItemKey : (\d+)")
 
 
 class LogReader:
-    """Lógica pura de tail (sem Qt): guarda offset, lê só bytes novos."""
+    """Lógica pura de tail (sem Qt): guarda offset, lê só bytes novos.
 
-    def __init__(self, caminho):
+    Usa modo binário de propósito: precisamos dar seek() para um offset de byte
+    arbitrário (stat().st_size), o que só é garantido em arquivos binários — em
+    modo texto, seeks válidos são apenas 0 ou um valor retornado por tell().
+    As linhas de drop são ASCII, então decode utf-8/ignore é seguro.
+    """
+
+    def __init__(self, caminho: Path | str):
         self.caminho = Path(caminho)
         self._offset = 0
 
@@ -19,7 +27,7 @@ class LogReader:
         except OSError:
             self._offset = 0
 
-    def ler_novos(self) -> list:
+    def ler_novos(self) -> list[str]:
         """ItemKeys das linhas acrescentadas desde a última leitura."""
         try:
             tamanho = self.caminho.stat().st_size
@@ -33,7 +41,7 @@ class LogReader:
             f.seek(self._offset)
             trecho = f.read().decode("utf-8", "ignore")
             self._offset = tamanho
-        return [m.group(2) for m in PADRAO.finditer(trecho)]
+        return [m.group(1) for m in PADRAO.finditer(trecho)]
 
 
 class LogWatcher(QObject):
@@ -55,7 +63,7 @@ class LogWatcher(QObject):
     def parar(self) -> None:
         self._timer.stop()
 
-    def definir_caminho(self, caminho) -> None:
+    def definir_caminho(self, caminho: Path | str) -> None:
         self._reader = LogReader(caminho)
         if self._timer.isActive():
             self._reader.seek_to_end()

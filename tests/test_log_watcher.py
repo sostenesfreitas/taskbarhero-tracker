@@ -24,6 +24,13 @@ def test_arquivo_inexistente_retorna_vazio(tmp_path):
     r = LogReader(tmp_path / "naoexiste.log")
     assert r.ler_novos() == []
 
+def test_seek_to_end_arquivo_inexistente_offset_zero(tmp_path):
+    p = tmp_path / "Player.log"
+    r = LogReader(p)
+    r.seek_to_end()          # arquivo ainda não existe -> offset 0
+    p.write_text(LINHA.format("910651"), encoding="utf-8")
+    assert r.ler_novos() == ["910651"]
+
 def test_truncamento_reabre_do_inicio(tmp_path):
     p = tmp_path / "Player.log"
     p.write_text(LINHA.format("910651") * 3, encoding="utf-8")
