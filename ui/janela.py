@@ -74,12 +74,14 @@ class Janela(QWidget):
         self._popular_cards()
 
     def _ao_ficar_pronto(self, item_key: str) -> None:
+        estado = self._rastreador.estado(item_key)
+        if estado is None:
+            return  # baú não é mais monitorado (ex.: removido via config)
         card = self._cards.get(item_key)
         if card:
             card.atualizar(); card.pulsar()
         if self._alertas:
-            tipo = self._rastreador.estado(item_key).bau.tipo
-            self._alertas.tocar(tipo)
+            self._alertas.tocar(estado.bau.tipo)
 
     def contar_cards(self) -> int:
         return len(self._cards)
