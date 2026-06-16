@@ -27,6 +27,13 @@ def test_json_corrompido_recria_padroes(tmp_path):
     assert c.monitorados == DEFAULTS["monitorados"]
     assert (tmp_path / "config.json.bak").exists()
 
+def test_default_monitorados_nao_compartilhado(tmp_path):
+    c1 = Config(tmp_path / "a.json")
+    c2 = Config(tmp_path / "b.json")
+    c1.monitorados.append("999999")
+    assert "999999" not in c2.monitorados
+    assert "999999" not in DEFAULTS["monitorados"]
+
 def test_auto_detect_log_path_formato():
     from config import log_path_padrao
     p = log_path_padrao()

@@ -1,3 +1,5 @@
+"""Configuração do app (dados + filesystem): escolhas do usuário e caminho do log. Sem Qt."""
+import copy
 import json
 import os
 from pathlib import Path
@@ -22,11 +24,12 @@ DEFAULTS = {
 
 
 class Config:
-    def __init__(self, caminho=None):
+    def __init__(self, caminho: Path | str | None = None):
         self.caminho = Path(caminho) if caminho else _config_path_padrao()
         dados = self._carregar()
         for chave, padrao in DEFAULTS.items():
-            setattr(self, chave, dados.get(chave, padrao))
+            # deepcopy evita que instâncias compartilhem os defaults mutáveis (listas/dicts)
+            setattr(self, chave, dados.get(chave, copy.deepcopy(padrao)))
 
     def _carregar(self) -> dict:
         if not self.caminho.exists():
