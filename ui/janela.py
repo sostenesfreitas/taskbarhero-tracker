@@ -1,7 +1,7 @@
 # ui/janela.py
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QPoint, Signal
+from PySide6.QtCore import Qt, QPoint, QEvent, QTimer, Signal
 from PySide6.QtGui import QFontDatabase
 from PySide6.QtWidgets import (QWidget, QFrame, QVBoxLayout, QHBoxLayout, QLabel,
                                QPushButton, QScrollArea)
@@ -32,22 +32,26 @@ class Janela(QWidget):
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
         self.move(QPoint(*config.janela_pos))
 
-        moldura = QFrame(); moldura.setObjectName("Moldura")
-        raiz = QVBoxLayout(self); raiz.setContentsMargins(0, 0, 0, 0); raiz.addWidget(moldura)
-        col = QVBoxLayout(moldura); col.setContentsMargins(4, 4, 4, 4); col.setSpacing(3)
+        self._moldura = QFrame(); self._moldura.setObjectName("Moldura")
+        raiz = QVBoxLayout(self); raiz.setContentsMargins(0, 0, 0, 0); raiz.addWidget(self._moldura)
+        col = QVBoxLayout(self._moldura); col.setContentsMargins(4, 4, 4, 4); col.setSpacing(3)
 
-        col.addWidget(self._construir_titulo())
+        self._titulobarra = self._construir_titulo()
+        col.addWidget(self._titulobarra)
         self._status = QLabel(); self._status.setObjectName("Status")
         col.addWidget(self._status)
         self.atualizar_status()
 
-        area = QScrollArea(); area.setWidgetResizable(True); area.setFrameShape(QFrame.NoFrame)
+        self._area = QScrollArea(); self._area.setWidgetResizable(True); self._area.setFrameShape(QFrame.NoFrame)
+        self._area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         host = QWidget(); self._grade = QVBoxLayout(host)
         self._grade.setSpacing(0); self._grade.setContentsMargins(0, 0, 0, 0)
-        area.setWidget(host); col.addWidget(area)
+        self._area.setWidget(host); col.addWidget(self._area)
         self._popular_cards()
 
         self.setMinimumWidth(280)
+        self._aplicar_estado_foco()
+        self._ajustar_altura()
         self._rastreador.on_pronto(self._ao_ficar_pronto)
 
     def _construir_titulo(self) -> QFrame:
@@ -55,9 +59,13 @@ class Janela(QWidget):
         h = QHBoxLayout(barra); h.setContentsMargins(8, 4, 4, 4)
         titulo = QLabel("RECORDS"); titulo.setObjectName("TituloTexto")
         h.addWidget(titulo); h.addStretch()
-        cfgbtn = QPushButton("⚙"); cfgbtn.setFixedSize(24, 24); cfgbtn.clicked.connect(self._abrir_config)
+        cfgbtn = QPushButton("⚙"); cfgbtn.setObjectName("BtnTitulo")  # ⚙
+        cfgbtn.setFixedSize(22, 22); cfgbtn.setToolTip("Configurações")
+        cfgbtn.clicked.connect(self._abrir_config)
         h.addWidget(cfgbtn)
-        fechar = QPushButton("X"); fechar.setFixedSize(24, 24); fechar.clicked.connect(self._fechar)
+        fechar = QPushButton("✕"); fechar.setObjectName("BtnTitulo")  # ✕
+        fechar.setFixedSize(22, 22); fechar.setToolTip("Fechar")
+        fechar.clicked.connect(self._fechar)
         h.addWidget(fechar)
         return barra
 
@@ -85,6 +93,32 @@ class Janela(QWidget):
             card.setParent(None)
         self._cards.clear()
         self._popular_cards()
+        self._ajustar_altura()
+
+    def _ajustar_altura(self) -> None:
+        """Encolhe a janela para caber exatamente os baús (sem espaço sobrando).
+        Diferido pro próximo ciclo: o sizeHint só fica correto após o layout assentar."""
+        QTimer.singleShot(0, self._fazer_ajuste_altura)
+
+    def _fazer_ajuste_altura(self) -> None:
+        host = self._area.widget()
+        host.adjustSize()
+        altura = host.sizeHint().height()
+        MAX = 420  # acima disso, rola
+        self._area.setFixedHeight(min(altura, MAX))
+        self.adjustSize()
+
+    def _aplicar_estado_foco(self) -> None:
+        """Mostra as molduras douradas só quando a janela está em foco."""
+        ativo = "true" if self.isActiveWindow() else "false"
+        for w in (self._moldura, self._titulobarra):
+            w.setProperty("ativo", ativo)
+            w.style().unpolish(w); w.style().polish(w)
+
+    def changeEvent(self, ev):
+        if ev.type() == QEvent.ActivationChange:
+            self._aplicar_estado_foco()
+        super().changeEvent(ev)
 
     def _ao_ficar_pronto(self, item_key: str) -> None:
         estado = self._rastreador.estado(item_key)

@@ -19,11 +19,25 @@ QFrame#Moldura {{
     border-top: 3px solid {OURO_BRILHO}; border-left: 3px solid {OURO};
     border-right: 3px solid {OURO_SOMBRA}; border-bottom: 3px solid {OURO_SOMBRA};
 }}
+/* sem foco: some com a moldura dourada (fica um painel escuro discreto) */
+QFrame#Moldura[ativo="false"] {{
+    background: {OBSIDIANA}; border: 1px solid {BREU};
+}}
 QFrame#TituloBarra {{
     background: qlineargradient(x1:0,y1:0, x2:0,y2:1, stop:0 {BANNER_TOPO}, stop:1 {BANNER_BASE});
     border: 2px solid {OURO};
 }}
+/* sem foco: barra de título sem borda dourada e mais discreta */
+QFrame#TituloBarra[ativo="false"] {{
+    background: {COURO}; border: 1px solid {BREU};
+}}
 QLabel#TituloTexto {{ font-family: 'Press Start 2P'; color: {TEXTO_OURO}; font-size: 12px; }}
+/* botões do header: sem padding (não cortam o glifo) + fonte com símbolos */
+QPushButton#BtnTitulo {{
+    background: rgba(0,0,0,0.25); border: 1px solid {OURO_SOMBRA}; color: {TEXTO_OURO};
+    padding: 0px; font-family: 'Segoe UI Symbol','Segoe UI'; font-size: 12px;
+}}
+QPushButton#BtnTitulo:hover {{ border-color: {OURO_BRILHO}; color: {OURO_BRILHO}; }}
 QLabel#Status {{ color: {TEXTO_MUDO}; font-size: 11px; }}
 
 /* --- Linha compacta (estilo RECORDS) --- */
