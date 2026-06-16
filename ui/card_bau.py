@@ -44,7 +44,7 @@ class CardBau(QFrame):
         layout.addWidget(icone)
 
         self._nome = QLabel(_nome_curto(bau)); self._nome.setObjectName("LinhaNome")
-        self._nome.setFixedWidth(76)
+        self._nome.setFixedWidth(92)  # mono é mais largo; cabe "ActBoss Lv80"
         layout.addWidget(self._nome)
 
         self._stage = QLabel(); self._stage.setObjectName("LinhaStage")
@@ -54,7 +54,7 @@ class CardBau(QFrame):
 
         self._tempo = QLabel(); self._tempo.setObjectName("LinhaTempo")
         self._tempo.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self._tempo.setMinimumWidth(68)  # cabe "PRONTO" sem cortar (fonte maior)
+        self._tempo.setMinimumWidth(54)  # cabe "PRONTO" sem cortar
         layout.addWidget(self._tempo)
 
         self.setProperty("raridade", bau.raridade)
