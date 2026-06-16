@@ -34,7 +34,7 @@ class Janela(QWidget):
 
         moldura = QFrame(); moldura.setObjectName("Moldura")
         raiz = QVBoxLayout(self); raiz.setContentsMargins(0, 0, 0, 0); raiz.addWidget(moldura)
-        col = QVBoxLayout(moldura); col.setContentsMargins(6, 6, 6, 6); col.setSpacing(6)
+        col = QVBoxLayout(moldura); col.setContentsMargins(4, 4, 4, 4); col.setSpacing(3)
 
         col.addWidget(self._construir_titulo())
         self._status = QLabel(); self._status.setObjectName("Status")
@@ -42,17 +42,18 @@ class Janela(QWidget):
         self.atualizar_status()
 
         area = QScrollArea(); area.setWidgetResizable(True); area.setFrameShape(QFrame.NoFrame)
-        host = QWidget(); self._grade = QVBoxLayout(host); self._grade.setSpacing(6)
+        host = QWidget(); self._grade = QVBoxLayout(host)
+        self._grade.setSpacing(0); self._grade.setContentsMargins(0, 0, 0, 0)
         area.setWidget(host); col.addWidget(area)
         self._popular_cards()
 
-        self.setMinimumWidth(300)
+        self.setMinimumWidth(280)
         self._rastreador.on_pronto(self._ao_ficar_pronto)
 
     def _construir_titulo(self) -> QFrame:
         barra = QFrame(); barra.setObjectName("TituloBarra")
         h = QHBoxLayout(barra); h.setContentsMargins(8, 4, 4, 4)
-        titulo = QLabel("TASKBAR HERO"); titulo.setObjectName("TituloTexto")
+        titulo = QLabel("RECORDS"); titulo.setObjectName("TituloTexto")
         h.addWidget(titulo); h.addStretch()
         cfgbtn = QPushButton("⚙"); cfgbtn.setFixedSize(24, 24); cfgbtn.clicked.connect(self._abrir_config)
         h.addWidget(cfgbtn)
