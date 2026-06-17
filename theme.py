@@ -38,7 +38,7 @@ QPushButton#BtnTitulo {{
     padding: 0px; font-family: 'Segoe UI Symbol','Segoe UI'; font-size: 12px;
 }}
 QPushButton#BtnTitulo:hover {{ border-color: {OURO_BRILHO}; color: {OURO_BRILHO}; }}
-QLabel#Status {{ color: {TEXTO_MUDO}; font-size: 11px; }}
+QLabel#Status {{ color: {TEXTO_MUDO}; font-family: 'Departure Mono'; font-size: 9px; }}
 
 /* --- Linha compacta (estilo RECORDS) --- */
 QFrame#Linha {{ background: {OBSIDIANA}; border: none; border-bottom: 1px solid {BREU}; }}

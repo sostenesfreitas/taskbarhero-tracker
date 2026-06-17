@@ -85,8 +85,17 @@ class Janela(QWidget):
         """Reflete se o Player.log foi encontrado (erro de config mais comum)."""
         if Path(self._config.log_path).exists():
             self._status.setText("● Monitorando")
+            self._status.setProperty("erro", "false")
         else:
             self._status.setText("⚠ Log não encontrado — abra ⚙ para escolher o arquivo")
+            self._status.setProperty("erro", "true")
+        self._atualizar_visibilidade_status()
+
+    def _atualizar_visibilidade_status(self) -> None:
+        """Sem foco mostra só a lista: o "Monitorando" some, mas o aviso de erro fica
+        (senão o painel some sem explicação)."""
+        erro = self._status.property("erro") == "true"
+        self._status.setVisible(self.isActiveWindow() or erro)
 
     def recriar_cards(self) -> None:
         for card in self._cards.values():
@@ -112,6 +121,7 @@ class Janela(QWidget):
         """Sem foco: esconde o header e a moldura dourada (fica só a lista discreta)."""
         ativo = self.isActiveWindow()
         self._titulobarra.setVisible(ativo)   # header some quando sem foco
+        self._atualizar_visibilidade_status()  # "Monitorando" some junto (só a lista fica)
         self._moldura.setProperty("ativo", "true" if ativo else "false")
         self._moldura.style().unpolish(self._moldura); self._moldura.style().polish(self._moldura)
         self._ajustar_altura()                # janela encolhe sem o header
