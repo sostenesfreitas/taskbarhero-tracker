@@ -115,7 +115,11 @@ class Janela(QWidget):
         altura = host.sizeHint().height()
         MAX = 420  # acima disso, rola
         self._area.setFixedHeight(min(altura, MAX))
-        self.adjustSize()
+        # adjustSize() não encolhe uma top-level já visível (quirk do Qt): força o resize
+        # pelo sizeHint pra janela colar exatamente nos baús, sem sobra embaixo.
+        self.layout().activate()
+        self._moldura.layout().activate()
+        self.resize(self.sizeHint())
 
     def _aplicar_estado_foco(self) -> None:
         """Sem foco: esconde o header e a moldura dourada (fica só a lista discreta)."""
